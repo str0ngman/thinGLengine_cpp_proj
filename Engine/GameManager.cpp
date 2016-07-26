@@ -5,7 +5,7 @@
 #include "../RenderEngine/Loader.h"
 #include "../RenderEngine/Renderer.h"
 #include "../RenderEngine/RawModel.h"
-
+#include "../Shaders/StaticShader.h"
 
 //init glfw and glew
 GameManager::GameManager(){
@@ -20,7 +20,7 @@ GameManager::GameManager(){
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 		//Create the the display manager(pointers must be deleted
-		displayManager = new DisplayManager(640, 480, "thinEngine GL Test Programme");
+		m_displayManager = new DisplayManager(640, 480, "thinEngine GL Test Programme");
 
 		//Init glew using experimental
 		glewExperimental = GL_TRUE;
@@ -39,7 +39,7 @@ GameManager::GameManager(){
 
 //release displaymanager, release glfw
 GameManager::~GameManager(){
-	delete displayManager;
+	delete m_displayManager;
 	glfwTerminate();
 }
 
@@ -50,6 +50,8 @@ void GameManager::Start(){
 
 	Loader loader;
 	Renderer renderer;
+
+	StaticShader staticShader("basicShader");
 
 	float vertices[] = {
 		-0.5f, 0.5f, 0.0f,
@@ -67,11 +69,14 @@ void GameManager::Start(){
 	//RawModel model = loader.LoadToVAO(vertices, sizeof(vertices) / sizeof(vertices[0]));
 	RawModel model = loader.LoadToVAO(vertices, indices, sizeof(vertices) / sizeof(vertices[0]), sizeof(indices) / sizeof(indices[0]));
 	//start the game loop
-	while (displayManager->IsWindowOpen()) {
-		renderer.Prepare();
-		renderer.Render(&model);
+	while (m_displayManager->IsWindowOpen()) {
 
-		displayManager->UpdateDisplay();
+		renderer.Prepare();
+		staticShader.Use();
+		renderer.Render(&model);
+		staticShader.UnUse();
+
+		m_displayManager->UpdateDisplay();
 	}
 }
 

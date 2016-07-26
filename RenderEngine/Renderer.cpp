@@ -15,7 +15,9 @@ void Renderer::Render(RawModel* model){
 	glEnableVertexAttribArray(0);
 
 	//draw the model
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//wireframe mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glDrawArrays(GL_TRIANGLES, 0, model->GetVertexCount());
 	glDrawElements(GL_TRIANGLES, model->GetVertexCount(), GL_UNSIGNED_INT, 0);
 	

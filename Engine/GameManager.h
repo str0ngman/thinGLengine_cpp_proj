@@ -10,7 +10,7 @@ public:
 
 	void Start();
 private:
-	DisplayManager* displayManager;
+	DisplayManager* m_displayManager;
 	
 };
 

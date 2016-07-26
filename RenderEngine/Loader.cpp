@@ -25,16 +25,12 @@ RawModel Loader::LoadToVAO(float vertices[], int indices[], int vertCount, int i
 
 	//create a new VAO
 	GLuint vaoID = CreateVAO();
-
 	BindIndicesBuffer(indices, indCount);
 
 	//store the data in an attribute list
 	StoreDataInAttributeList(0, vertices, vertCount);
-
 	UnbindVAO();
-
 	return RawModel(vaoID, vertCount);
-
 
 }
 
