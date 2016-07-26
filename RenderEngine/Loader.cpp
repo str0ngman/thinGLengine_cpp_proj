@@ -1,4 +1,5 @@
 #include "Loader.h"
+#include <iostream>
 
 Loader::Loader(){
 	vaos.clear();
@@ -20,17 +21,19 @@ Loader:: ~Loader(){
 	}
 }
 
-RawModel Loader::LoadToVAO(float positions[], int count){
+RawModel Loader::LoadToVAO(float vertices[], int indices[], int vertCount, int indCount){
+
 	//create a new VAO
 	GLuint vaoID = CreateVAO();
 
+	BindIndicesBuffer(indices, indCount);
 
 	//store the data in an attribute list
-	StoreDataInAttributeList(0, positions, count);
+	StoreDataInAttributeList(0, vertices, vertCount);
 
 	UnbindVAO();
 
-	return RawModel(vaoID, count);
+	return RawModel(vaoID, vertCount);
 
 
 }
@@ -54,7 +57,7 @@ GLuint Loader::CreateVAO(){
 }
 
 void Loader::StoreDataInAttributeList(GLuint attribNumber,
-	float data[], int count){
+	float data[], int& count){
 
 	GLuint vboID;
 	//create a new buffer
@@ -68,4 +71,11 @@ void Loader::StoreDataInAttributeList(GLuint attribNumber,
 
 	//tell opengl how and where to store this vbo in the vao
 	glVertexAttribPointer(attribNumber, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+}
+
+void Loader::BindIndicesBuffer(int indices[], int& count){
+	GLuint vboID;
+	glGenBuffers(1, &vboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices)*count, indices, GL_STATIC_DRAW);
 }

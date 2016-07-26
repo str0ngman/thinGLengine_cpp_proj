@@ -1,6 +1,6 @@
 #include "RawModel.h"
 
-RawModel::RawModel(GLuint a, int b):
+RawModel::RawModel(GLuint &a, int &b):
 m_vaoID(a), m_vertexCount(b){
 
 }

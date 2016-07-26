@@ -55,14 +55,17 @@ void GameManager::Start(){
 		-0.5f, 0.5f, 0.0f,
 		-0.5f, -0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
-
-		0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f
+		0.5f, 0.5f, 0.0f
 	};
 
-	RawModel model = loader.LoadToVAO(vertices, sizeof(vertices) / sizeof(vertices[0]));
+	int indices[] = {
+		0, 1, 3,
+		3, 1, 2
+	};
+	
 
+	//RawModel model = loader.LoadToVAO(vertices, sizeof(vertices) / sizeof(vertices[0]));
+	RawModel model = loader.LoadToVAO(vertices, indices, sizeof(vertices) / sizeof(vertices[0]), sizeof(indices) / sizeof(indices[0]));
 	//start the game loop
 	while (displayManager->IsWindowOpen()) {
 		renderer.Prepare();

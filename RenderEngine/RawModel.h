@@ -5,7 +5,7 @@
 
 class RawModel{
 public:
-	RawModel(GLuint,int);
+	RawModel(GLuint&,int&);
 	virtual ~RawModel();
 
 	GLuint GetVaoID();
