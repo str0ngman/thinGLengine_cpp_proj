@@ -2,6 +2,7 @@
 
 StaticShader::StaticShader(const std::string& fileName):
 ShaderProgram("../res/shaders/"+fileName){
+	BindAttributes();
 }
 
 StaticShader::~StaticShader(){

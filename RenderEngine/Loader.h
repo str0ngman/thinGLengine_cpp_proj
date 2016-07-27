@@ -4,6 +4,7 @@
 #include "../Models/RawModel.h"
 #include <GL\glew.h>
 #include <vector>
+#include <string>
 
 using std::vector;
 
@@ -13,16 +14,17 @@ public:
 	virtual ~Loader();
 
 	//RawModel LoadToVAO(float positions[], int count);
-	RawModel LoadToVAO(float vertices[], int indices[], 
-		 int vertCount, int indCount, int texCount);
+	RawModel LoadToVAO(float vertices[], int indices[], float texCoords[], int vertCount, int indCount, int texCount);
+
 	GLuint	 LoadTexture(const std::string& fileName);
+
 	void UnbindVAO();
 private:
 	vector<GLuint> vaos;
 	vector<GLuint> vbos;
 	vector<GLuint> m_textures;
 	GLuint CreateVAO();
-	void StoreDataInAttributeList(GLuint attribNumber,
+	void StoreDataInAttributeList(GLuint attribNumber, int size,
 		float data[],int& count);
 	void BindIndicesBuffer(int indices[], int& count);
 };

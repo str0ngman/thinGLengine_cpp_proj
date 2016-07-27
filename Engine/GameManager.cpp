@@ -5,6 +5,8 @@
 #include "../RenderEngine/Loader.h"
 #include "../RenderEngine/Renderer.h"
 #include "../Models/RawModel.h"
+#include "../Models/TexturedModel.h"
+#include "../Textures/ModelTexture.h"
 #include "../Shaders/StaticShader.h"
 
 //init glfw and glew
@@ -65,15 +67,27 @@ void GameManager::Start(){
 		3, 1, 2
 	};
 	
+	float texCoords[] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0
+	};
 
 	//RawModel model = loader.LoadToVAO(vertices, sizeof(vertices) / sizeof(vertices[0]));
-	RawModel model = loader.LoadToVAO(vertices, indices, sizeof(vertices) / sizeof(vertices[0]), sizeof(indices) / sizeof(indices[0]));
+	RawModel model = loader.LoadToVAO(vertices, indices, texCoords,
+		sizeof(vertices) / sizeof(vertices[0]),
+		sizeof(indices) / sizeof(indices[0]),
+		sizeof(texCoords) / sizeof(texCoords[0]));
+
+	ModelTexture texture(loader.LoadTexture("image"));
+	TexturedModel texturedModel(model, texture);
 	//start the game loop
 	while (m_displayManager->IsWindowOpen()) {
 
 		renderer.Prepare();
 		staticShader.Use();
-		renderer.Render(&model);
+		renderer.Render(&texturedModel);
 		staticShader.UnUse();
 
 		m_displayManager->UpdateDisplay();

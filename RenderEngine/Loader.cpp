@@ -29,7 +29,8 @@ Loader:: ~Loader(){
 	}
 }
 
-RawModel Loader::LoadToVAO(float vertices[], int indices[], float texCoords[],int vertCount, int indCount,int texCount){
+RawModel Loader::LoadToVAO(float vertices[], int indices[], float texCoords[], int vertCount, int indCount, int texCount){
+
 
 	//create a new VAO
 	GLuint vaoID = CreateVAO();
@@ -50,6 +51,28 @@ GLuint Loader::LoadTexture(const std::string& fileName){
 	stbi_uc* imageData = stbi_load(
 		("../res/textures/" + fileName + ".png").c_str(),
 		&width, &height, &numComponents, 4);
+
+	if (imageData == NULL){
+		std::cerr << "Error:texture loading failed for" << fileName << std::endl;
+	}
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// How OpenGL will fill an area that's to big or to small
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// Store the OpenGL texture data
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+
+	// Store the buffer in the list
+	m_textures.push_back(texture);
+
+	// Unload image data
+	stbi_image_free(imageData);
+
+	return texture;
 }
 void Loader::UnbindVAO(){
 	glBindVertexArray(0);
