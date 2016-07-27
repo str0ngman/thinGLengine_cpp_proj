@@ -4,7 +4,7 @@
 #include "GameManager.h"
 #include "../RenderEngine/Loader.h"
 #include "../RenderEngine/Renderer.h"
-#include "../RenderEngine/RawModel.h"
+#include "../Models/RawModel.h"
 #include "../Shaders/StaticShader.h"
 
 //init glfw and glew

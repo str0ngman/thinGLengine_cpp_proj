@@ -1,7 +1,7 @@
 #ifndef LOADER_H
 #define LOADER_H
 
-#include "RawModel.h"
+#include "../Models/RawModel.h"
 #include <GL\glew.h>
 #include <vector>
 
@@ -13,12 +13,14 @@ public:
 	virtual ~Loader();
 
 	//RawModel LoadToVAO(float positions[], int count);
-	RawModel LoadToVAO(float vertices[], int indices[], int vertCount, int indCount);
-
+	RawModel LoadToVAO(float vertices[], int indices[], 
+		 int vertCount, int indCount, int texCount);
+	GLuint	 LoadTexture(const std::string& fileName);
 	void UnbindVAO();
 private:
 	vector<GLuint> vaos;
 	vector<GLuint> vbos;
+	vector<GLuint> m_textures;
 	GLuint CreateVAO();
 	void StoreDataInAttributeList(GLuint attribNumber,
 		float data[],int& count);

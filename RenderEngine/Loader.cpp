@@ -1,9 +1,12 @@
 #include "Loader.h"
 #include <iostream>
+#include <cassert>
+#include "../stb_image.h"
 
 Loader::Loader(){
 	vaos.clear();
 	vbos.clear();
+	m_textures.clear();
 	//clear() cant release stored memory, just clear the data.
 	//need to check the data one by one and delete them ,
 	//is a better choice, check this part later.
@@ -19,21 +22,35 @@ Loader:: ~Loader(){
 		glDeleteVertexArrays(1, &vaos.back());
 		vaos.pop_back();
 	}
+
+	while (m_textures.size() > 0){
+		glDeleteTextures(1, &m_textures.back());
+		m_textures.pop_back();
+	}
 }
 
-RawModel Loader::LoadToVAO(float vertices[], int indices[], int vertCount, int indCount){
+RawModel Loader::LoadToVAO(float vertices[], int indices[], float texCoords[],int vertCount, int indCount,int texCount){
 
 	//create a new VAO
 	GLuint vaoID = CreateVAO();
 	BindIndicesBuffer(indices, indCount);
 
 	//store the data in an attribute list
-	StoreDataInAttributeList(0, vertices, vertCount);
+	StoreDataInAttributeList(0, 3,vertices, vertCount);
+	StoreDataInAttributeList(1, 2, texCoords, texCount);
 	UnbindVAO();
 	return RawModel(vaoID, vertCount);
 
 }
+GLuint Loader::LoadTexture(const std::string& fileName){
+	GLuint texture;
+	int width, height, numComponents;
 
+	//Load image data
+	stbi_uc* imageData = stbi_load(
+		("../res/textures/" + fileName + ".png").c_str(),
+		&width, &height, &numComponents, 4);
+}
 void Loader::UnbindVAO(){
 	glBindVertexArray(0);
 }
@@ -52,7 +69,7 @@ GLuint Loader::CreateVAO(){
 	return vaoID;
 }
 
-void Loader::StoreDataInAttributeList(GLuint attribNumber,
+void Loader::StoreDataInAttributeList(GLuint attribNumber,int size,
 	float data[], int& count){
 
 	GLuint vboID;
@@ -66,7 +83,7 @@ void Loader::StoreDataInAttributeList(GLuint attribNumber,
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data)* count, data, GL_STATIC_DRAW);
 
 	//tell opengl how and where to store this vbo in the vao
-	glVertexAttribPointer(attribNumber, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glVertexAttribPointer(attribNumber, size, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 
 void Loader::BindIndicesBuffer(int indices[], int& count){

@@ -1,7 +1,8 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "RawModel.h"
+#include "../Models/RawModel.h"
+#include "../Models/TexturedModel.h"
 
 class Renderer{
 public:
@@ -9,7 +10,7 @@ public:
 	virtual ~Renderer();
 
 	void Prepare();
-	void Render(RawModel* model);
+	void Render(TexturedModel* texutredModel);
 };
 
 #endif //!RENDERER_H
