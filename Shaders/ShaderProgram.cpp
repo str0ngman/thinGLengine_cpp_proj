@@ -1,26 +1,25 @@
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
+#include "ShaderProgram.h"
 
-#include "ShaderProgam.h"
 
-
-ShaderProgram::ShaderProgram(const std::string& fileName){
-	//Load shader from file
+ShaderProgram::ShaderProgram(const std::string& fileName)
+{
+	// Load shaders from file
 	m_vertexShaderID = LoadShader(fileName + ".vert", GL_VERTEX_SHADER);
 	m_fragmentShaderID = LoadShader(fileName + ".frag", GL_FRAGMENT_SHADER);
 
-	//create shader program
+	// Create shader program
 	m_programID = glCreateProgram();
-
-	//attach the shaders to the program
+	// Attach the shaders to the program
 	glAttachShader(m_programID, m_vertexShaderID);
 	glAttachShader(m_programID, m_fragmentShaderID);
-
-	//Link the program
+	BindAttributes();
+	// Link the program
 	glLinkProgram(m_programID);
 	glValidateProgram(m_programID);
 
-	//check validation status
+	// Check validation status
 	GLint status;
 	glGetProgramiv(m_programID, GL_VALIDATE_STATUS, &status);
 	if (status == GL_FALSE)
@@ -35,10 +34,13 @@ ShaderProgram::ShaderProgram(const std::string& fileName){
 		// Delete the array
 		delete[] infoLog;
 	}
+
+	GetAllUniformLocations();
 }
 
 
-ShaderProgram:: ~ShaderProgram(){
+ShaderProgram::~ShaderProgram()
+{
 	UnUse();
 	glDetachShader(m_programID, m_vertexShaderID);
 	glDetachShader(m_programID, m_fragmentShaderID);
@@ -47,62 +49,118 @@ ShaderProgram:: ~ShaderProgram(){
 	glDeleteProgram(m_programID);
 }
 
-void ShaderProgram::Use(){
+
+void ShaderProgram::Use()
+{
 	glUseProgram(m_programID);
 }
-void ShaderProgram::UnUse(){
+
+
+void ShaderProgram::UnUse()
+{
 	glUseProgram(0);
 }
 
 
-GLuint ShaderProgram::LoadShader(const std::string& fileName, GLenum type){
-
-	//open the file
+GLuint ShaderProgram::LoadShader(const std::string& fileName, GLenum type)
+{
+	// Open the file
 	std::ifstream file;
 	file.open((fileName).c_str());
 
-	//Create temp variable
+	// Create temp variables
 	std::string source, line;
 
-	if (file.is_open()){
-		while (file.good()){
-
+	if (file.is_open())
+	{
+		// Load file to string
+		while (file.good())
+		{
 			getline(file, line);
 			source.append(line + "\n");
-
 		}
 	}
-	else {
-		std::cerr << "Unable to load Shader: " << fileName << std::endl;
+	else
+	{
+		std::cerr << "Unable to load shader: " << fileName << std::endl;
 	}
 
+	// Create shader ID
 	GLuint shaderID = glCreateShader(type);
 
-	//Prepare source for OpenGL
+	// Prepare source for OpenGL
 	const GLchar* sourceStrings[1];
 	GLint sourceLengths[1];
-
 	sourceStrings[0] = source.c_str();
 	sourceLengths[0] = source.length();
 
-	//load source to OpenGL and Compile
+	// Load source to OpenGL and compile
 	glShaderSource(shaderID, 1, sourceStrings, sourceLengths);
 	glCompileShader(shaderID);
 
-	//check comiple status
-	GLint success;
-	GLchar infoLog[512];
-	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
-	if (!success)
+	// Check compile status
+	GLint status;
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &status);
+	if (status == GL_FALSE)
 	{
-		glGetShaderInfoLog(shaderID, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-			<< "infoLog: " << infoLog << std::endl;
+		// Get info log length
+		GLint infoLogLength;
+		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+		// Get the info log
+		GLchar* infoLog = new GLchar[infoLogLength];
+		glGetShaderInfoLog(shaderID, infoLogLength, NULL, infoLog);
+		std::cerr << "ERROR: could not compile shader \n" << infoLog << std::endl;
+		// Delete the array
+		delete[] infoLog;
 	}
+
 	return shaderID;
 }
 
 
-void ShaderProgram::BindAttribute(int attribute, const std::string& variableName){
+void ShaderProgram::BindAttributes()
+{
+}
+
+
+void ShaderProgram::BindAttribute(int attribute, const std::string& variableName)
+{
 	glBindAttribLocation(m_programID, attribute, variableName.c_str());
+}
+
+
+void ShaderProgram::GetAllUniformLocations()
+{
+
+}
+
+
+GLuint ShaderProgram::GetUniformLocation(const std::string& name)
+{
+	return glGetUniformLocation(m_programID, name.c_str());
+}
+
+
+void ShaderProgram::LoadFloat(GLuint location, float value)
+{
+	glUniform1f(location, value);
+}
+
+
+void ShaderProgram::LoadVector(GLuint location, glm::vec3 value)
+{
+	glUniform3f(location, value.x, value.y, value.z);
+}
+
+
+void ShaderProgram::LoadBool(GLuint location, bool value)
+{
+	// if value == true load 1 else 0
+	glUniform1f(location, value ? 1 : 0);
+}
+
+
+void ShaderProgram::LoadMatrix4(GLuint location, glm::mat4 value)
+{
+	glUniformMatrix4fv(location, 1, false, &value[0][0]);
 }
