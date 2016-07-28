@@ -18,7 +18,7 @@ public:
 
 	GLuint	 LoadTexture(const std::string& fileName);
 
-	void UnbindVAO();
+	inline void UnbindVAO(){ glBindVertexArray(0); }
 private:
 	vector<GLuint> vaos;
 	vector<GLuint> vbos;

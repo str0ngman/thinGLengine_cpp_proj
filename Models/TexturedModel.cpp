@@ -9,11 +9,3 @@ TexturedModel::~TexturedModel(){
 }
 
 
-RawModel TexturedModel::GetRawModel(){
-	return m_rawModel;
-}
-
-
-ModelTexture TexturedModel::GetModelTexture(){
-	return m_texture;
-}

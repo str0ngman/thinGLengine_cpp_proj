@@ -14,7 +14,6 @@ ShaderProgram::ShaderProgram(const std::string& fileName)
 	// Attach the shaders to the program
 	glAttachShader(m_programID, m_vertexShaderID);
 	glAttachShader(m_programID, m_fragmentShaderID);
-	BindAttributes();
 	// Link the program
 	glLinkProgram(m_programID);
 	glValidateProgram(m_programID);
@@ -35,7 +34,6 @@ ShaderProgram::ShaderProgram(const std::string& fileName)
 		delete[] infoLog;
 	}
 
-	GetAllUniformLocations();
 }
 
 
@@ -49,17 +47,6 @@ ShaderProgram::~ShaderProgram()
 	glDeleteProgram(m_programID);
 }
 
-
-void ShaderProgram::Use()
-{
-	glUseProgram(m_programID);
-}
-
-
-void ShaderProgram::UnUse()
-{
-	glUseProgram(0);
-}
 
 
 GLuint ShaderProgram::LoadShader(const std::string& fileName, GLenum type)
@@ -118,20 +105,10 @@ GLuint ShaderProgram::LoadShader(const std::string& fileName, GLenum type)
 }
 
 
-void ShaderProgram::BindAttributes()
-{
-}
-
 
 void ShaderProgram::BindAttribute(int attribute, const std::string& variableName)
 {
 	glBindAttribLocation(m_programID, attribute, variableName.c_str());
-}
-
-
-void ShaderProgram::GetAllUniformLocations()
-{
-
 }
 
 
@@ -141,26 +118,26 @@ GLuint ShaderProgram::GetUniformLocation(const std::string& name)
 }
 
 
-void ShaderProgram::LoadFloat(GLuint location, float value)
+void ShaderProgram::LoadFloat(GLuint& location, float& value)
 {
 	glUniform1f(location, value);
 }
 
 
-void ShaderProgram::LoadVector(GLuint location, glm::vec3 value)
+void ShaderProgram::LoadVector(GLuint& location, glm::vec3& value)
 {
 	glUniform3f(location, value.x, value.y, value.z);
 }
 
 
-void ShaderProgram::LoadBool(GLuint location, bool value)
+void ShaderProgram::LoadBool(GLuint& location, bool& value)
 {
 	// if value == true load 1 else 0
 	glUniform1f(location, value ? 1 : 0);
 }
 
 
-void ShaderProgram::LoadMatrix4(GLuint location, glm::mat4 value)
+void ShaderProgram::LoadMatrix4(GLuint& location, glm::mat4& value)
 {
 	glUniformMatrix4fv(location, 1, false, &value[0][0]);
 }

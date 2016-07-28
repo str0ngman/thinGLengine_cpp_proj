@@ -6,13 +6,15 @@
 
 class DisplayManager{
 public:
-	DisplayManager(int,int,const std::string& title = "thinEngine window");
+	DisplayManager(int w,int h,const std::string& title = "thinEngine window");
 	virtual ~DisplayManager();
 	
 	bool IsWindowOpen();
 	void UpdateDisplay();
+	float& GetAspect();
 private:
 	GLFWwindow* m_window;
+	float m_aspect;
 };
 
 #endif //DISPLAY_MANAGER_H

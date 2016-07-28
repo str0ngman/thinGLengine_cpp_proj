@@ -8,7 +8,7 @@ public:
 	ModelTexture(GLuint id);
 	virtual ~ModelTexture();
 
-	GLuint GetTextureID();
+	inline GLuint GetTextureID(){ return m_textureID; }
 private:
 	GLuint m_textureID;
 };
