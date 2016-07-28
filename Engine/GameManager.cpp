@@ -149,6 +149,7 @@ void GameManager::Start(){
 
 	float x = -0.001f;
 	//start the game loop
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (m_displayManager->IsWindowOpen()) {
 
 		//Rotate Cube
