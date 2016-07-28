@@ -6,6 +6,13 @@
 #include "../Models/TexturedModel.h"
 
 Renderer::Renderer(StaticShader& shader,float& aspect){
+	
+	
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+
 	//Create the projection matrix using GLM
 	m_projectionMatrix = glm::perspective(m_FOV, aspect, m_NEAR_PLANE, m_FAR_PLANE);
 
@@ -19,9 +26,6 @@ Renderer:: ~Renderer(){
 
 void Renderer::Prepare(){
 
-	glEnable(GL_DEPTH_TEST);
-
-	glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Renderer::Render(Entity& entity, StaticShader& shader){

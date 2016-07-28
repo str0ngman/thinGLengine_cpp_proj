@@ -4,7 +4,8 @@
 glm::mat4 Maths::CreateTransformMatrix(
 	glm::vec3& translation,
 	glm::vec3& rotation,
-	glm::vec3& scale	){
+	glm::vec3& scale)
+{
 
 	glm::mat4 transMatrix = glm::translate(translation);
 

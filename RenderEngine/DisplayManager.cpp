@@ -35,8 +35,8 @@ bool DisplayManager::IsWindowOpen(){
 }
 void DisplayManager::UpdateDisplay(){
 	
-	glfwPollEvents();
 	glfwSwapBuffers(m_window);
+	glfwPollEvents();
 
 }
 float& DisplayManager::GetAspect(){
